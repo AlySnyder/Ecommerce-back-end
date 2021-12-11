@@ -40,8 +40,8 @@ router.delete('/:id', (req, res) => {
   // Category.destroy({
   //   where: {
   //     id: req.params.id
-    }
-  })
+    // }
+  // })
 });
 
 module.exports = router;
