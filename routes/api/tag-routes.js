@@ -5,32 +5,61 @@ const { Tag, Product, ProductTag } = require('../../models');
 
 router.get('/', async (req, res) => {
   // find all tags
-  Tag.findAll()
+  Tag.findAll({
+    include: [
+      {
+        model: Product,
+        through: ProductTag,
+      }
+    ]
+  })
     .then((tags) => {
       res.status(200).json(tags);
     }).catch((err) => {
       res.status(500).json(err);
     })
-
 });
 
 router.get('/:id', (req, res) => {
   // find a single tag by its `id`
   // be sure to include its associated Product data
+  Tag.findByPk(req.params.id, {
+    include: [
+      {
+        model: Product,
+        through: ProductTag,
+      }
+    ]
+  })
+    .then((tag) => {
+      res.status(200).json(tag);
+    })
+    .catch((err) => {
+      res.status(500).json(err);
+    })
 });
 
 router.post('/', (req, res) => {
   // create a new tag
-  Tag.create({
-
+  Tag.create(req.body).then((tag) => {
+    res.status(200).json(tag);
+  }).catch((err) => {
+    res.status(500).json(err);
   })
 });
 
 router.put('/:id', (req, res) => {
   // update a tag's name by its `id` value
-  Tag.update({
-
+  Tag.update(req.body, {
+    where: {
+      id: req.params.id,
+    },
   })
+    .then((updatedTag) => res.json(updatedTag))
+    .catch((err) => {
+      // console.log(err);
+      res.status(400).json(err);
+    });
 });
 
 router.delete('/:id', (req, res) => {
@@ -39,10 +68,11 @@ router.delete('/:id', (req, res) => {
     where: {
       id: req.params.id
     }
-  }).then((whatever) => {
-    console.log(whatever)
-    res.status(200).json({})
-  });
+  }).then((isDeleted) => {
+    res.status(200).json(isDeleted)
+  }).catch((err) => {
+    res.status(500).json(err);
+  })
 });
 
 module.exports = router;

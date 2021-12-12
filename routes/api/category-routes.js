@@ -29,10 +29,10 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
   // create a new category
-  Category.create(req.body).then(() => {
+  Category.create(req.body).then((category) => {
     res.status(200).json(category);
   }).catch((err) => {
-    res.status(500).json.err;
+    res.status(500).json(err);
   })
 });
 
@@ -43,6 +43,11 @@ router.put('/:id', (req, res) => {
       id: req.params.id,
     },
   })
+    .then((updatedCategory) => res.json(updatedCategory))
+    .catch((err) => {
+      // console.log(err);
+      res.status(400).json(err);
+    });
 });
 
 router.delete('/:id', (req, res) => {
@@ -51,6 +56,10 @@ router.delete('/:id', (req, res) => {
     where: {
       id: req.params.id
     }
+  }).then((isDeleted) => {
+    res.status(200).json(isDeleted)
+  }).catch((err) => {
+    res.status(500).json(err);
   })
 });
 

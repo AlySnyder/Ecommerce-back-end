@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { Product, Category, Tag, ProductTag } = require('../../models');
+const { destroy } = require('../../models/Product');
 
 // The `/api/products` endpoint
 
@@ -31,7 +32,11 @@ router.get('/:id', (req, res) => {
       id: req.params.id
     },
     include: [
-      Category
+      Category,
+      {
+        model: Tag,
+        through: ProductTag,
+      }
     ]
   })
   // find a single product by its `id`
@@ -40,18 +45,10 @@ router.get('/:id', (req, res) => {
 
 // create new product
 router.post('/', (req, res) => {
-  /* req.body should look like this...
-    {
-      product_name: "Basketball",
-      price: 200.00,
-      stock: 3,
-      tagIds: [1, 2, 3, 4]
-    }
-  */
   Product.create(req.body)
     .then((product) => {
       // if there's product tags, we need to create pairings to bulk create in the ProductTag model
-      if (req.body.tagIds.length) {
+      if (req.body.tagIds && req.body.tagIds.length) {
         const productTagIdArr = req.body.tagIds.map((tag_id) => {
           return {
             product_id: product.id,
@@ -114,6 +111,15 @@ router.put('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
   // delete one product by its `id` value
+  Product.destroy({
+    where: {
+      id: req.params.id
+    }
+  }).then((isDeleted) => {
+    res.status(200).json(isDeleted)
+  }).catch((err) => {
+    res.status(500).json(err);
+  })
 });
 
 module.exports = router;
