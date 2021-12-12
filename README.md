@@ -21,7 +21,7 @@ Clone the repo located on my Github page to your local terminal. MySql , MAMP, a
 
 ## Usage
 
-[Walkthrough Video](https://github.com/AlySnyder/Team-Portfolio-Generator/raw/main/team-profile-generator.mov)
+[Walkthrough Video](Walkthrough.mp4)
 
 ## Tests
 

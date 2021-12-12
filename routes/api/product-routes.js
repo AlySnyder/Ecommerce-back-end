@@ -17,10 +17,10 @@ router.get('/', (req, res) => {
       },
     ],
   })
-  .then((products) => {
+    .then((products) => {
       res.status(200).json(products);
     })
-  .catch((err) => {
+    .catch((err) => {
       res.status(500).json(err);
     });
 });
@@ -39,6 +39,11 @@ router.get('/:id', (req, res) => {
       }
     ]
   })
+    .then((product) => {
+      res.status(200).json(product);
+    }).catch((err) => {
+      res.status(500).json(err);
+    })
   // find a single product by its `id`
   // be sure to include its associated Category and Tag data
 });
